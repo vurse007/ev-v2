@@ -35,7 +35,7 @@ double metersToTicks(double meters)
 }
 
 
-class PID {
+class PID { 
   public:
 
     double kP;

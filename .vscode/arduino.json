@@ -1,0 +1,7 @@
+{
+    "sketch": "ev-v9-can.ino",
+    "configuration": "rp2040:rp2040:rpipico",
+    "board": "rp2040:rp2040:rpipico",
+    "output": "../build",
+    "port": "COM26"
+}
