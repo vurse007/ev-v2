@@ -165,7 +165,7 @@ void motorWriteR(double speed) {
   }
 }
 
-const unsigned long HEADING_SETTLE_MS = 1000;  // 1 second
+const unsigned long HEADING_SETTLE_MS = 500;  // 1 second
 
 // =====================================================
 // DRIVE STRAIGHT FOR A GIVEN DISTANCE (METERS)
@@ -229,8 +229,8 @@ void driveDistanceMeters(double meters, unsigned long timeoutMs, double speedSca
     motorWriteL(leftSpeed);
     motorWriteR(rightSpeed);
 
-    if (fabs(distanceError) < 100){
-      heading_corrector.kP = 6.7;
+    if (fabs(distanceError) < 50){
+      heading_corrector.kP = 2.0;
       heading_corrector.kD = 0;
     }
 
@@ -376,7 +376,7 @@ void turnToAngle(double targetAngleRad,
     // Tighten gains near target
     if (fabs(angleError) < 0.15) {
       turn_corrector.kP = 6.5;
-      turn_corrector.kD = 0;
+      turn_corrector.kD = 10;
     }
 
     // Debug
@@ -492,14 +492,14 @@ void loop() {
 
         heading = 0; // reset heading after calibration
 
-        delay(250); // slight buffer before movement
+        delay(50); // slight buffer before movement
         Serial.println("Calibration complete → Running sequence");
 
 
       // Example distances & timeouts — tweak these:
       double driveDist = 0.5;          // meters
-      double targetDist = 8.0;
-      unsigned long driveTimeout = 6000;  // ms
+      double targetDist = 9.0;
+      unsigned long driveTimeout = 7000;  // ms
       unsigned long turnTimeout  = 1500;  // ms
 
       double driveScale = 1;   // 80% of tuned speed
@@ -510,24 +510,24 @@ void loop() {
 
 
       turnToAngle(-PI/2.0,turnTimeout,turnScale);
-      delay(100);
+      delay(10);
 
-      driveDistanceMeters(0.9, 1000, 1);
-      delay(100);
+      driveDistanceMeters(0.89, 1000, 1);
+      delay(10);
 
 
       turnToAngle(0,turnTimeout,turnScale);
-      delay(500);
+      delay(10);
 
-      driveDistanceMeters(4, driveTimeout, driveScale);
-      delay(100);
+      driveDistanceMeters(9.1, driveTimeout, driveScale);
+      delay(10);
 
 
       turnToAngle(PI/2,turnTimeout,turnScale);
 
-      delay(100);
+      delay(10);
 
-      driveDistanceMeters(0.9, 1000, 1);
+      driveDistanceMeters(0.88, 1000, 1);
 
 
       // while(1){
