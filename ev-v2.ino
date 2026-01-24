@@ -1,4 +1,4 @@
-// #define DIR_R 4
+I // #define DIR_R 4
 // #define PWM_R 5
 // #define DIR_L 7
 // #define PWM_L 8

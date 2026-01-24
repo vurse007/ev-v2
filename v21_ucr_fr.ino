@@ -110,8 +110,8 @@ class PID {
 ICM20689 imu(SPI, CS_IMU);
 
 // PID CONTROLLERS
-PID heading_corrector(2.1, 0.0, 400.0);
-PID turn_corrector(0.7, 0, 101);
+PID heading_corrector(1.4, 0.0, 567);
+PID turn_corrector(0.7, 0, 277);
 PID distance_corrector(0.0045, 0, 0);
 
 double wrapAngle(double a) {
@@ -204,7 +204,7 @@ const unsigned long HEADING_SETTLE_MS = 500;  // 1 second
 void driveDistanceMeters(double meters, unsigned long timeoutMs, double speedScale)
 {
   heading_corrector.kP = 4.5;
-  heading_corrector.kD = 400;
+  heading_corrector.kD = 467;
   Serial.println("=== driveDistanceMeters (OLD LOGIC) ===");
 
   const double TARGET_DISTANCE = metersToTicks(meters);
@@ -409,7 +409,7 @@ void turnToAngle(double targetAngleRad,
     // Tighten gains near target
     if (fabs(angleError) < 0.15) {
       turn_corrector.kP = 6.5;
-      turn_corrector.kD = (10+27) / 2;
+      turn_corrector.kD = (27) / 2;
     }
 
     // Debug
@@ -596,7 +596,7 @@ void loop() {
 
       turnToAngle(PI/2,turnTimeout,turnScale);
 
-      delay(100);
+      delay(65);
 
       driveDistanceMeters(0.82, 1000, 1);
 
