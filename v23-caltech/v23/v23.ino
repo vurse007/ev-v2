@@ -65,7 +65,7 @@ public:
 
 PID headingPID(4.5, 0, 600);
 PID turnPID(1.2, 0, 15);
-PID distancePID(2.0, 0, 30);
+PID distancePID(2.0, 0, 35);
 
 // ===================== HELPERS =====================
 double wrap360(double a) {
@@ -174,8 +174,8 @@ void driveDistance(double meters, unsigned long timeoutMs, double speedScale) {
   distancePID.reset();
   headingPID.reset();
 
-  headingPID.kP = 20;
-  headingPID.kD = 600;
+  headingPID.kP = 6;
+  headingPID.kD = 467;
 
   int settled = 0;
 
@@ -242,12 +242,12 @@ void driveDistance(double meters, unsigned long timeoutMs, double speedScale) {
 
     Serial.println(err);
 
-    if (fabs(err) < 0.05) {
-      headingPID.kP = 2.0;
+    if (fabs(err) < 0.1) {
+      headingPID.kP = 3.0;
       headingPID.kD = 0;
     }
 
-    if (fabs(err) < 0.01) settled++;
+    if (fabs(err) < 0.07) settled++;
     else settled = 0;
 
     if (settled >= 17) break;
@@ -293,6 +293,8 @@ void turnTo(double targetDeg, unsigned long timeoutMs, double speedScale) {
 
   unsigned long startTime = millis();
 
+  count=0;
+
   while (true) {
 
     while (millis() - lastLoopTime < LOOP_DT);
@@ -320,7 +322,7 @@ void turnTo(double targetDeg, unsigned long timeoutMs, double speedScale) {
 
     if (fabs(err) < 3) count++;
 
-    if (count >= 175) break;
+    if (count >= 75) break;
   }
 
   setMotor(MOTOR_L_PWM, MOTOR_L_IN1, MOTOR_L_IN2, 0);
@@ -358,10 +360,10 @@ void setup() {
   // calibrate gyro
   for (int i = 0; i < 500; i++) {
     readGyro();
-    //gyroOffset += gz;
+    gyroOffset += gz;
     delay(2);
   }
-  //gyroOffset /= 500.0;
+  gyroOffset /= 500.0;
 
   // 🔥 FIX: initialize encoders
   enc1Last = rawToDeg(readEncoder(ENC1_CS));
@@ -376,8 +378,22 @@ void loop() {
   updateIMU();   // always running
   updateEncoders();
 
-  // turnTo(90, 2000, 1);
-  // delay(500);
+  turnTo(-90, 2000, 1);
+  delay(500);
+
+  driveDistance(0.85, 3000, 1);
+  delay(500);
+
+  turnTo(0, 2000, 1);
+  delay(500);
+
+  driveDistance(4.0, 6000, 1);
+  delay(500);
+
+  turnTo(90, 2000, 1);
+  delay(500);
+
+  driveDistance(0.85, 3000, 1);
 
   // turnTo(180, 2000, 1);
   // delay(500);
@@ -388,8 +404,8 @@ void loop() {
   // turnTo(0, 2000, 1);
   // delay(500);
 
-  driveDistance(5.0, 3000, 1.0);
-  delay(500);
+  // driveDistance(5.0, 3000, 1.0);
+  // delay(500);
 
   while (true);
 
